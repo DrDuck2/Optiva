@@ -1,0 +1,115 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+typedef struct list {
+	int x;
+	struct list* nextNode;
+}LIST;
+
+LIST* createList()
+{
+	LIST* headNode = (LIST*)calloc(1, sizeof(LIST));
+	if (headNode == NULL)
+	{
+		perror("Kreiranje\n");
+		return NULL;
+	}
+	else {
+		headNode->nextNode = NULL;
+	}
+	return headNode;
+}
+
+LIST* insertNewNodeList(LIST* headNode)
+{
+	LIST* newHeadNode = (LIST*)calloc(1, sizeof(LIST));
+
+	if (newHeadNode == NULL)
+	{
+		perror("Kreiranje");
+		return headNode;
+	}
+	else
+	{
+		newHeadNode->nextNode = headNode;
+	}
+	return newHeadNode;
+}
+
+void randomGen(LIST* lista, int* V, int n)
+{
+	srand(time(NULL));
+	for (int i = 0; i < n; i++)
+	{
+		*(V + i) = rand() % (100 - 0) + 0;
+		lista->x = rand() % (100 - 0) + 0;
+		lista = lista->nextNode;
+	}
+}
+
+void ArrayFind(int* V, int x, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		if (*(V+i) == x)
+		{
+			printf("Broj je pronadjen!\n");
+			return;
+		}
+	}
+	printf("Broj nije pronadjen!\n");
+}
+
+void LinkedListFind(LIST* headnode, int x)
+{
+	while (headnode)
+	{
+		if (headnode->x == x)
+		{
+			printf("Broj je pronadjen!\n");
+			return;
+		}
+		headnode = headnode->nextNode;
+	}
+	printf("Broj nije pronadjen!\n");
+}
+
+int main()
+{
+	printf("Unesite velicinu polja i povezanog popisa :\n");
+	int n;
+	scanf("%d", &n);
+	int* V;
+	time_t t1, t2, t3, t4, t5, t6, t7, t8;
+	t1 = clock();
+	V = (int*)malloc(n * sizeof(int));
+	t2 = clock();
+	printf("Vrijeme kreiranja array u ms:%d\n", t2 - t1);
+
+	t3 = clock();
+	LIST* lista = NULL;
+	lista = createList();
+	for (int i = 0; i < n; i++)
+	{
+		lista = insertNewNodeList(lista);
+	}
+	t4 = clock();
+	printf("Vrijeme kreiranja LinkedList u ms:%d\n", t4 - t3);
+
+	randomGen(lista, V, n);
+
+	printf("Unesite broj koji zelite pronaci:\n");
+	int x;
+	scanf("%d", &x);
+
+	t5 = clock();
+	ArrayFind(V, x, n);
+	t6 = clock();
+	printf("Vrijeme find array u ms:%d\n", t6 - t5);
+	t7 = clock();
+	LinkedListFind(lista, x);
+	t8 = clock();
+	printf("Vrijeme find lista u ms:%d\n", t8 - t7);
+}

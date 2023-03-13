@@ -1,0 +1,102 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void gen_arr(float V[], int n, float dg, float gg)
+{
+	for (int i = 0; i < n; i++)
+	{
+		V[i] = dg + (float)rand() / (float)(RAND_MAX / gg - dg);
+	}
+}
+
+int sekv_pret(float V[], int n, float x)
+{
+	int i;
+	float precision = 0.000001;
+	for (i = 0; i < n; i++)
+	{ 
+		if ((V[i]+precision > x) && (V[i]-precision < x))
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+void sort(float V[], int n)
+{
+	int i, j;
+	float hold;
+	for (i = 0; i < n-1; i++)
+	{
+		for (j = 0; j < n -i - 1; j++)
+		{
+			if (V[j] > V[j + 1])
+			{
+				hold = V[j];
+				V[j] = V[j + 1];
+				V[j + 1] = hold;
+			}
+		}
+	}
+}
+
+
+int bin_pret(float V[], int n, float x)
+{
+	float precision = 0.000001;
+	int dg = 0, gg = n - 1;
+	int ss;
+	do
+	{
+		ss = (dg + gg) / 2;
+		if (V[ss] > x)
+		{
+			gg = ss - 1;
+		}
+		if (V[ss] < x)
+		{
+			dg = ss + 1;
+		}
+		if ((V[ss] + precision > x) && (V[ss] - precision < x))
+		{
+			return ss;
+		}
+	} while (dg <= gg);
+	return -1;
+}
+
+int main()
+{
+    	time_t t1,t2,t3,t4,t5,t6;
+	int n;
+	printf("Unesite broj elemenata polja:\n");
+	scanf("%d", &n);
+	float* V;
+	V = (float*)malloc(n * sizeof(float));
+	float dg, gg;
+	printf("Unesite donju i gornju granicu:\n");
+	scanf("%f %f", &dg, &gg);
+	gen_arr(V, n, dg, gg);
+	float x;
+	printf("Unesite broj koji zelite pronaci:\n");
+	scanf("%f", &x);
+	
+	t1 = clock();
+	printf("Broj se nalazi na polozaju:%d\n", sekv_pret(V, n, x));
+	t2 = clock();
+	printf("Vrijeme trajanja sekvencijalnog %ld ms\n",(t2-t1)/1000);
+	t3= clock();
+	sort(V, n);
+	t4= clock();
+    	printf("Vrijeme trajanja sortiranja %ld ms\n",(t4-t3)/1000);
+	t5=clock();
+	printf("Broj od binarnog pretrazivanja se nalazi na polozaju:%d\n", bin_pret(V, n, x));
+	t6=clock();
+	printf("Vrijeme trajanja binarnog %ld ms\n",(t6-t5)/1000);
+    	return 0;
+
+
+}
