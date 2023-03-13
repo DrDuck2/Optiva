@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+FILE *datoteka;
+char *filename = "piramida.txt";
+
+
+void piramida(int razmak,int lenght)
+{
+    int i;
+    for(i=0;i<lenght;i++)
+    {
+        if(i>=razmak-1 && i<=lenght-razmak)
+        {
+            fprintf(datoteka,"*");
+        } else fprintf(datoteka,"-");
+    }
+    if(razmak==-1)
+    {
+        exit(EXIT_SUCCESS);
+    }
+    else 
+    {
+        fprintf(datoteka,"\n");
+        piramida(razmak-1,lenght);
+    }
+}
+
+int main()
+{
+    int visina;
+    do{
+        scanf("%d",&visina);
+    }while(visina<0 || visina>30);
+    if(!(datoteka=fopen(filename,"w")))
+        {
+            fprintf(stderr,"Greska pri ucitavanju datoteke za pisanje!");
+            exit(EXIT_FAILURE);
+        }
+    piramida(visina,visina*2);
+    fclose(datoteka);
+    return EXIT_SUCCESS;
+}

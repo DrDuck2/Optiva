@@ -1,0 +1,47 @@
+#include <stdio.h>
+
+typedef struct datum
+{
+  int dan;
+  int mjesec;
+  int godina;
+}DATUM;
+
+
+typedef struct ucenik
+{
+    char ime[20];
+    char prezime[20];
+    long int maticni;
+    float prosjek;
+    DATUM rodjendan;
+}UCENIK;
+
+int main()
+{
+    UCENIK a[40];
+    int i,n;
+    int max=0,maxi=0;
+    printf("Unesite koliki broj ucenika zelite unijeti: ");
+    scanf("%d",&n);
+    for(i=0;i<n;i++)
+    {
+        printf("Unesite Ime ucenika: ");
+        scanf("%19s",a[i].ime);
+        printf("Unesite Prezime ucenika: ");
+        scanf("%19s",a[i].prezime);
+        printf("Unesite maticni broj ucenika: ");
+        scanf("%d",&a[i].maticni);
+        printf("Unesite Prosjek ucenika: ");
+        scanf("%f",&a[i].prosjek);
+        printf("Unesite datum rodjenja ucenika u formatu dan.mjesec.godina: ");
+        scanf("%d.%d.%d.",&a[i].rodjendan.dan,&a[i].rodjendan.mjesec,&a[i].rodjendan.godina);
+        if(max<a[i].prosjek)
+        {
+            max=a[i].prosjek;
+            maxi=i;
+        }
+    }
+    printf("REZULTATI:\n%s %s",a[maxi].ime,a[maxi].prezime);
+    return 0;
+}

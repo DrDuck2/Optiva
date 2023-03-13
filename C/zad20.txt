@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "header.h"
+
+#define scan(a) scanf("%d",&a)
+
+int main()
+{
+    int n;
+    do{
+        scan(n);
+    }while(n<1 || n>7);
+    funkcija(n);
+    return(EXIT_SUCCESS);
+}
+
+#ifndef HEADER_H
+#define HEADER_H
+#define _CRT_SECURE_NO_WARNINGS
+
+enum dani_u_tjednu {ponedjeljak=1,utorak,srijeda,cetvrtak,petak,subota,nedjelja};
+
+void funkcija(int);
+
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "header.h"
+
+void funkcija(int n)
+{
+    printf("REZULTATI:\n");
+    if(n==subota || n==nedjelja)
+    {
+        printf("Vikeeeend!\n");
+    }
+    else printf("Radis jos %d dana do vikenda.\n",5-n);
+}

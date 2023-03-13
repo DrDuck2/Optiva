@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+FILE *datoteka;
+char *filename = "in1.txt";
+
+void inputData(int *p,int n)
+{
+    int i;
+    for(i=0;i<n;i++)
+    {
+        fscanf(datoteka,"%d",(p+i));
+    }
+    fclose(datoteka);
+}
+
+void sekvencijalnoPretrazivanje(int *p,int n,int N)
+{
+    printf("REZULTATI:\n");
+    int i;
+    int pronasli=0,br=0;
+    for(i=0;i<n;i++)
+    {
+        if(*(p+i) == N)
+        {
+            pronasli = 1;
+            break;
+        }
+        br++;
+    }
+    if(pronasli) printf("Broj %d je pronadjen nakon %d koraka.",N,br+1);
+    else printf("Broj %d nije pronadjen.",N);
+}
+
+int main()
+{
+    int *p;
+    int N;
+    p=(int*)malloc(500*sizeof(int));
+    
+    if(!(datoteka=fopen(filename,"r")))
+    {
+        fprintf(stderr,"Greska, nije moguce otvoriti datoteku za citanje!");
+        exit(EXIT_FAILURE);
+    }
+    inputData(p,500);
+    
+    do{
+        scanf("%d",&N);
+    }while(N<0 || N>1000);
+    
+    sekvencijalnoPretrazivanje(p,500,N);
+    
+    free(p);
+    return(EXIT_SUCCESS);
+}

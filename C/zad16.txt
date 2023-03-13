@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "myheader.h"
+
+FILE *datoteka;
+char *filename="racun.txt";
+
+int main()
+{
+    Racun *R;
+    Artikl *A;
+    int n,i;
+    float ukupna_cijena=0;
+    if(!(datoteka=fopen(filename,"r")))
+    {
+        fprintf(stderr,"Greska,nije moguce otvoriti datoteku za citanje!");
+        exit(EXIT_FAILURE);
+    }
+    R=(Racun*)malloc(sizeof(Racun));
+    R->prodavac = (char*)malloc(sizeof(char));
+    R->kupac = (char*)malloc(sizeof(char));
+    
+    fscanf(datoteka,"%s",&R->prodavac);
+    fscanf(datoteka,"%s",&R->kupac);
+    fscanf(datoteka,"%d",&R->broj_artikala);
+    
+    A = (Artikl*)malloc(n*sizeof(Artikl));
+    
+    for(i=0;i<n;i++)
+    {
+        fscanf(datoteka,"%s",&A[i].naziv);
+        fscanf(datoteka,"%f",&A[i].cijena);
+        fscanf(datoteka,"%d",&A[i].kolicina);
+        ukupna_cijena+=A[i].cijena*A[i].kolicina;
+    }
+    printf("REZULTATI:\n");
+    printf("Ukupan iznos racuna: %.2f.",ukupna_cijena);
+    free(R);
+    free(A);
+    fclose(datoteka);
+    return(EXIT_SUCCESS);
+}
+
+
+#ifndef MYHEADER_H
+#define MYHEADER_H
+
+typedef struct artikl {
+  char *naziv;
+  float cijena;
+  int kolicina;
+} Artikl;
+typedef struct racun {
+  char *prodavac;
+  char *kupac;
+  Artikl *artikli;
+  int  broj_artikala;
+  float ukupan_iznos;
+} Racun;
+
+
+/* Ukoliko koristite dodatne funkcije mozete ih navesti nakon ovog komentara */
+
+
+#endif
+
+

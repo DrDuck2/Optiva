@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+struct cpl {
+  float re;
+  float im;
+};
+
+int main(void)
+{
+  struct cpl a, b, c, d;
+  puts("Upisi realni i imaginarni dio prvog broja");
+  scanf("%f", &a.re);
+  scanf("%f", &a.im);
+  puts("Upisi realni i imaginarni dio drugog broja");
+  scanf("%f", &b.re);
+  scanf("%f", &b.im);
+    c.re=a.re+b.re;
+    c.im=a.im+b.im;
+    d.re=a.re-b.re;
+    d.im=a.im-b.im;
+  printf("REZULTATI:\n");
+  printf("%.3f, %.3f*i\n", c.re, c.im);
+  printf("%.3f, %.3f*i\n", d.re, d.im);
+
+  return 0;
+}

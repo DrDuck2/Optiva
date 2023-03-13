@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include "myheader.h"
+
+
+
+int main(void)
+{
+  int n, m;
+  Tocka tocke[100];
+  Trokut trokuti[100];
+  float opseg;
+
+  printf("Upisi broj tocaka koje zelis unijeti: ");
+  scanf("%d", &n);
+
+  printf("Upisi broj trokuta koje zelis unijeti: ");
+  scanf("%d", &m);
+
+  unesiTocke(tocke, n);
+  unesiTrokute(trokuti, tocke, m);
+
+  opseg = pronadjiNajveciOpseg(trokuti, m);
+
+  printf("REZULTATI:\n");
+  printf("%.2f", opseg);
+
+	return 0;
+}
+
+#ifndef MYHEADER_H
+#define MYHEADER_H
+
+typedef struct tocka {
+    float x;
+    float y;
+    float z;
+} Tocka;
+typedef struct trokut {
+    struct tocka *t1;
+    struct tocka *t2;
+    struct tocka *t3;
+} Trokut;
+
+void unesiTocke(Tocka* p, int n);
+void unesiTrokute(Trokut* , Tocka*, int m);
+float pronadjiNajveciOpseg(Trokut*, int m);
+
+/* Ukoliko koristite dodatne funkcije mozete ih navesti nakon ovog komentara */
+
+
+
+
+#endif
+
+
+#include "myheader.h"
+
+void unesiTocke(Tocka* p, int n)
+{
+    int i;
+    for(i=0;i<n;i++)
+    {
+        scanf("%f%f%f",&p[i].x,&p[i].y,&p[i].z);
+    }
+}
+
+void unesiTrokute(Trokut* k, Tocka* p, int m)
+{
+    int i;
+    int ind1,ind2,ind3;
+    for(i=0;i<m;i++)
+    {
+        scanf("%f%f%f",&ind1,&ind2,&ind3);
+        k[i].t1=&p[ind1];
+        k[i].t2=&p[ind2];
+        k[i].t3=&p[ind3];
+    }
+}
+
+float pronadjiNajveciOpseg(Trokut* k, int m)
+{
+     int i;
+     float opseg=0;
+     for(i=0;i<m;i++)
+     {
+         
+     }
+     
+     
+     
+     
+}

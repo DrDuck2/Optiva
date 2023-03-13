@@ -1,0 +1,97 @@
+#include "myheader.h"
+#include <stdio.h>
+#include<stdlib.h>
+
+int main(void)
+{
+	int **M=NULL;
+	int m, n, K;
+	printf("Unesi n i m: ");
+	scanf("%d%d", &n, &m);
+
+    printf("Unesi k: ");
+    scanf("%d", &K);
+
+
+	M = allocateMatrix(n, m);
+
+	inputMatrix(M, n, m);
+
+    matrixTimesK(M, n, m, K);
+
+    printf("REZULTATI:\n");
+    printMatrix(M, n, m);
+
+	return 0;
+}
+
+#ifndef FUNCTIONS_H
+#define FUNCTIONS_H
+#define _CRT_SECURE_NO_WARNINGS
+
+int **allocateMatrix(int n, int m);
+
+void inputMatrix(int **M, int n, int m);
+
+void matrixTimesK(int **M,int n,int m, int K);
+
+void printMatrix(int **M, int n, int m);
+
+#endif
+
+#include "myheader.h"
+#include<stdio.h>
+
+#include<stdlib.h>
+
+int** allocateMatrix(int n, int m)
+{
+    int i;
+    int **M;
+    M=(int**)malloc(n*sizeof(int*));
+    for(i=0;i<n;i++)
+    {
+        M[i]=(int*)malloc(m*sizeof(int));
+    }
+    return M;
+}
+
+
+void inputMatrix(int **M, int n, int m)
+{
+    int i,j;
+    for(i=0;i<n;i++)
+    {
+        for(j=0;j<m;j++)
+        {
+            scanf("%d",(*(M+i)+j));
+        }
+    }
+}
+
+void matrixTimesK(int **M,int n,int m, int K)
+{
+    int i,j;
+    for(i=0;i<n;i++)
+    {
+        for(j=0;j<m;j++)
+        {
+            M[i][j]*=K;
+        }
+        
+    }
+}
+
+
+void printMatrix(int **M, int n, int m)
+{
+    int i,j;
+    for(i=0;i<n;i++)
+    {
+        for(j=0;j<m;j++)
+        {
+            printf("%d\t", M[i][j]);
+        }
+        printf("\n");
+    }
+}

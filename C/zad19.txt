@@ -1,0 +1,193 @@
+// ovo je main datoteka koja sadrži pozive svih potrebnih funkcija, nju ne trebate dirati
+
+#include <stdio.h>
+#include "header.h"
+
+
+int  main() {
+	int n, i, x;
+	
+	STUDENT *headNode = NULL;
+	STUDENT *targetNode = NULL;
+	
+	printf("Koliko studenata zelis unijeti? ");
+	scanf("%d", &n);
+
+	headNode = createSLList();                      // kreiranje povezanog popisa i umetanje prvog člana
+
+	for (i = 0; i < n-1; i++)
+	{
+		headNode = insertNewNodeSLList(headNode);   // umetanje sljedećih n-1 članova
+	}
+
+	printf("Unesite ID studenta kojeg trazite\n");  // unos ID-a studenta kojeg tražimo i brišemo
+	scanf("%d", &x);
+	
+	printf("REZULTATI:\n");
+	
+	traverseSLList(headNode);                       // obilazak povezanog popisa i ispis svih članova
+	printf("Ukupan prosjek svih studenata je: %.2f\n", prosjekSvih(headNode)); // izračun prosjeka svih studenata
+
+	targetNode = searchSLList(headNode, x);         // traženje studenta preko ID-a
+
+	if (targetNode == NULL) {
+		printf("Student s trazenim ID-em nije pronadjen!\n");   // ispis poruke ako nije pronadjen
+	}
+	else {                                                      // ako je pronadjen
+		deleteNodeSLList(&headNode, targetNode);                // brisanje studenta
+		traverseSLList(headNode);                               // ponovni obilazak povezanog popisa i ispis svih članova
+		printf("Ukupan prosjek svih studenata je: %.2f\n", prosjekSvih(headNode)); // ponovni izračun prosjeka svih preostalih studenata
+	}
+	headNode = deleteWholeSLList(headNode);                     // oslobađanje memorije za cijeli povezani popis
+
+	return 0;
+}
+
+#ifndef FUNCTIONS_H
+#define FUNCTIONS_H
+#define _CRT_SECURE_NO_WARNINGS
+
+typedef struct student {
+	char *ime;
+	char *prezime;
+	int id;
+	float prosjek;
+	struct student* nextNode;
+}STUDENT;
+
+void inputNodeData(STUDENT*);
+float prosjekSvih(STUDENT *);
+STUDENT* createSLList(void);
+void traverseSLList(STUDENT*);
+STUDENT* insertNewNodeSLList(STUDENT*);
+STUDENT* searchSLList(STUDENT*, int);
+void deleteNodeSLList(STUDENT**, STUDENT*);
+STUDENT* deleteWholeSLList(STUDENT*);
+
+#endif
+
+#include <stdio.h>
+#include "header.h"
+#include <stdlib.h>
+
+void inputNodeData(STUDENT *node)
+{
+    node->ime = (char*)malloc(500*sizeof(char));
+    node->prezime = (char*)malloc(500*sizeof(char));
+    scanf("%d",&node->id);
+    scanf("%s",node->ime);
+    getchar();
+    scanf("%s",node->prezime);
+    getchar();
+    scanf("%f",&node->prosjek);
+}
+
+float prosjekSvih(STUDENT *headnode)
+{
+    float prosjek=0,prosjek_max=0,counter=0;
+    while(headnode!=NULL)
+    {
+        prosjek_max+=headnode->prosjek;
+        headnode=headnode->nextNode;
+        counter++;
+    }
+    prosjek=prosjek_max/counter;
+    return prosjek;
+}
+
+STUDENT* createSLList()
+{
+    STUDENT* headNode = (STUDENT*)calloc(1,sizeof(STUDENT));
+    if(headNode==NULL)
+    {
+        perror("Kreiranje\n");
+        return NULL;
+    }
+    else{
+        headNode->nextNode = NULL;
+    }
+    inputNodeData(headNode);
+    return headNode;
+}
+
+void traverseSLList(STUDENT* traverseNode)
+{
+    int counter = 0;
+    
+    
+    while(traverseNode)
+    {
+        printf("ID: %d - %s %s, prosjek: %.2f\n",traverseNode->id,traverseNode->ime,traverseNode->prezime,traverseNode->prosjek);
+        traverseNode = traverseNode->nextNode;
+    }
+}
+
+STUDENT* insertNewNodeSLList(STUDENT* headNode)
+{
+    STUDENT* newHeadNode = (STUDENT*)calloc(1,sizeof(STUDENT));
+    
+    if(newHeadNode == NULL)
+    {
+        perror("Kreiranje");
+        return headNode;
+    }
+    else
+    {
+        newHeadNode->nextNode = headNode;
+    }
+    inputNodeData(newHeadNode);
+    return newHeadNode;
+}
+
+STUDENT* searchSLList(STUDENT* traversenode, int n)
+{
+    while(traversenode)
+    {
+        if(traversenode->id == n)
+        {
+            return traversenode;
+        }
+        else
+        {
+            traversenode = traversenode->nextNode;
+        }
+    }
+    return NULL;
+}
+
+void deleteNodeSLList(STUDENT** headnode, STUDENT* targetnode)
+{
+    if(*headnode == targetnode)
+    {
+        *headnode = (*headnode)->nextNode;
+        free(targetnode);
+    }
+    else
+    {
+        STUDENT* traversenode = *headnode;
+        
+        while(traversenode->nextNode)
+        {
+            if(traversenode->nextNode == targetnode)
+            {
+                traversenode->nextNode = targetnode->nextNode;
+                free(targetnode);
+                break;
+            }
+            traversenode = traversenode->nextNode;
+        }
+    }
+}
+
+STUDENT* deleteWholeSLList(STUDENT*traversenode)
+{
+    STUDENT *deletenode = NULL;
+    
+    while(traversenode)
+    {
+        deletenode = traversenode;
+        traversenode = traversenode->nextNode;
+        free(deletenode);
+    }
+    return NULL;
+}

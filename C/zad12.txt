@@ -1,0 +1,189 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+FILE *datoteka;
+char *filename = "clanovi.txt";
+FILE *posudbica;
+char *filename2 ="posudba.txt";
+
+
+typedef struct posudba{
+	char ime_filma[20];
+	int datum;
+	int sif;
+}POS;
+
+typedef struct podaci
+{		
+	char prezime[20];
+	char ime[20];
+	int sifra;
+	char adresa[100];
+	int br_tel;
+}POD;
+
+POD P[50];
+POS PS[50];
+
+int holder=0;
+int sif=0;
+
+void posudbafilma(int a)
+{
+    int n;
+    int i=0;
+    if(!(posudbica=fopen(filename2,"ab+")))
+	{
+		fprintf(stderr,"Greska: nije moguce otvoriti datoteku posudba.txt\n");
+		exit(EXIT_FAILURE);
+	}
+    for(i=0;i<a;i++)
+    {
+        if(sif==0){
+			printf("Unesite svoju sifru:\n");
+			scanf("%d",&PS[i].sif);
+			sif=1;
+	   	} 
+    	printf("Ime filma:\n");
+    	scanf(" %19[^\n]",PS[i].ime_filma);
+    	printf("Datum posudbe:(u danima):\n");
+    	scanf("%d",&PS[i].datum);
+    	fwrite(&PS[i],sizeof(struct posudba),1,posudbica);
+	}
+    fclose(posudbica);
+}
+
+void Kreiranjedatoteke()
+{
+	if(!(datoteka=fopen(filename,"w")))
+	{
+		fprintf(stderr,"Greska: nije moguce otvoriti datoteku clanovi.txt\n");
+		exit(EXIT_FAILURE);
+	}
+	fclose(datoteka);
+	if(!(posudbica=fopen(filename2,"w")))
+	{
+		fprintf(stderr,"Greska: nije moguce otvoriti datoteku posudba.txt\n");
+		exit(EXIT_FAILURE);
+	}
+	fclose(posudbica);
+	printf("Datoteke clanovi.txt i posudba.txt su kreirane!\n");
+}
+void Citanjedatoteke(int n)
+{
+	FILE *dat;
+	if(!(dat=fopen(filename,"rb")))
+	{
+		fprintf(stderr,"Greska: nije moguce otvoriti datoteku clanovi.txt\n");
+		exit(EXIT_FAILURE);
+	}
+	POD buffer[50];
+	printf("DATOTEKA JE OTVORENA: Ovo su podatci u njoj:\n");
+	int i;
+	rewind(dat);
+	for (i=0; i<n; i++){
+		while(fread(&buffer[i],sizeof(struct podaci),1,dat))
+			printf("Prezime:%s\nIme:%s\nSifra:%d\nAdresa%s\nbr_tel:%d\n",buffer[i].prezime,buffer[i].ime,buffer[i].sifra,buffer[i].adresa,buffer[i].br_tel);
+			printf("\n");
+	}
+	fclose(dat);
+}
+
+void Dodavanjeclanova(int i)
+{
+	if(!(datoteka=fopen(filename,"ab+")))
+	{
+		fprintf(stderr,"Greska: nije moguce otvoriti datoteku clanovi.txt\n");
+		exit(EXIT_FAILURE);
+	}
+	printf("DATOTEKA JE OTVORENA: Unesite podatke!\n");
+    printf("Prezime:\n");
+    scanf(" %19[^\n]",P[i].prezime);
+    printf("Ime:\n");
+    scanf(" %19[^\n]",P[i].ime);
+    printf("Sifra:\n");
+    scanf("%d",&P[i].sifra);
+    printf("Adresa:\n");
+    scanf(" %99[^\n]",P[i].adresa);
+    printf("br_tel:\n");
+    scanf("%d",&P[i].br_tel);
+    
+    fwrite(&P[i],sizeof(struct podaci),1,datoteka);
+    
+    fclose(datoteka);
+}
+
+int main()
+{
+	int n,holder1=0,holder2=0,holder3=0,holder4=0;
+	int i=0;
+	int b;
+	printf("1- Kreiranje datoteke Clanovi.txt\n");
+	printf("2- Citanje iz datoteke Clanovi.txt\n");
+	printf("3- Dodavanje novih clanova u Clanovi.txt\n");
+	printf("4- Posudba filma\n");
+	printf("5- Zavrsetak programa.\n");
+	do{
+		printf("Odaberi zeljenu radnju:\n");
+		do{
+			scanf("%d",&n);
+		}while(n<1 || n>5);
+		switch(n){
+			case 1:
+				if(holder1==0)
+				{
+					Kreiranjedatoteke();
+					holder1=1;
+					holder2=1;
+				}else  printf("Datoteka je vec kreirana!\n");
+				break;
+				
+			case 2:
+				if(holder3==0)
+				{
+					printf("Datoteka je prazna!\n");
+				}
+				else Citanjedatoteke(i);
+				break;
+			
+			case 3:
+				 switch(holder2)
+				 {
+					case 0:
+						printf("Morate kreirati datoteku!\n");
+						break;
+					case 1:
+						Dodavanjeclanova(i);
+						holder3=1;
+						holder4=1;
+						i++;
+						break;
+				 }
+				 break;
+			case 4:
+			    switch(holder4)
+			    {
+			    	case 0:
+			    		printf("Morate unijeti svoje podatke!\n");
+			    		break;
+			    	case 1:
+			    		printf("Koliko filmova zelite posuditi? (Najvise smijete posuditi 4 filma!)\n");
+			    		do{
+			    			scanf("%d",&b);
+			    		}while(b<0 || b>4);
+			    		holder+=b;
+			    		if(holder>4)
+			    		{
+			    			printf("Nemozete posuditi vise od 4 filma, smanjite broj posudjenih filmova za %d\n",holder-4);
+			    			holder-=b;
+						}
+			    		else posudbafilma(b);
+			    		break;
+				}
+				break;
+		}
+	}while(n!=5);
+	printf("Zavrsetak programa.\n");
+	holder=0;
+	return EXIT_SUCCESS;
+}

@@ -1,0 +1,110 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "myheader.h"
+
+FILE *datoteka;
+char *filename = "model.txt";
+    
+int main()
+{
+    int n,m;
+    Tocke *p;
+    Trokuti *t;
+    float rezultat;
+    if(!(datoteka=fopen(filename,"r")))
+        {
+            fprintf(stderr,"Greska, nije moguce otvoriti datoteku za citanje!");
+            exit(EXIT_FAILURE);
+        }
+    fscanf(datoteka,"%d %d",&n,&m);
+    fclose(datoteka);
+    
+    p=(Tocke*)malloc(n*sizeof(Tocke));
+    t=(Trokuti*)malloc(m*sizeof(Trokuti));
+    
+    unospodataka(p,t,n,m);
+    
+    rezultat=opseg(t,n);
+    
+    
+    printf("REZULTATI:\n");
+    printf("%.2f",rezultat);
+    
+    free(p);
+    free(t);
+    return(EXIT_SUCCESS);
+}
+
+#ifndef FUNCTIONS_H
+#define FUNCTIONS_H
+#define _CRT_SECURE_NO_WARNINGS
+
+typedef struct tocke{
+    float x;
+    float y;
+    float z;
+}Tocke;
+
+typedef struct trokuti{
+    Tocke *t1;
+    Tocke *t2;
+    Tocke *t3;
+}Trokuti;
+
+void unospodataka(Tocke *p,Trokuti *t,int n,int m);
+
+float opseg(Trokuti *t,int n);
+
+#endif
+
+#include "myheader.h"
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+
+
+void unospodataka(Tocke *p,Trokuti *t,int n,int m)
+{
+    FILE *datoteka;
+    int ind1,ind2,ind3;
+    int i;
+    int buffer1,buffer2;
+    if(!(datoteka=fopen("model.txt","r")))
+    {
+        fprintf(stderr,"Greska, nije moguce otvoriti datoteku za citanje!");
+        exit(EXIT_FAILURE);
+    }
+    fscanf(datoteka,"%d %d",&buffer1,&buffer2);
+    for(i=0;i<n;i++)
+    {
+        fscanf(datoteka,"%f %f %f",&p[i].x,&p[i].y,&p[i].z);
+    }
+    for(i=0;i<m;i++)
+    {
+        fscanf(datoteka,"%d %d %d",&ind1,&ind2,&ind3);
+        t[i].t1=&p[ind1];
+        t[i].t2=&p[ind2];
+        t[i].t3=&p[ind3];
+    }
+    fclose(datoteka);
+}
+
+
+float opseg(Trokuti *t,int n)
+{
+    int i;
+    float opseg=0,opseg_max=0;
+    float stranica1,stranica2,stranica3;
+    for(i=0;i<n;i++)
+    {
+        stranica1=sqrt((pow(t[i].t3->x-t[i].t1->x,2)+pow(t[i].t3->y-t[i].t1->y,2)+pow(t[i].t3->z-t[i].t1->z,2)));
+        stranica2=sqrt((pow(t[i].t3->x-t[i].t2->x,2)+pow(t[i].t3->y-t[i].t2->y,2)+pow(t[i].t3->z-t[i].t2->z,2)));
+        stranica3=sqrt((pow(t[i].t2->x-t[i].t1->x,2)+pow(t[i].t2->y-t[i].t1->y,2)+pow(t[i].t2->z-t[i].t1->z,2)));
+        opseg=stranica1+stranica2+stranica3;
+        if(opseg>opseg_max)
+        {
+            opseg_max=opseg;
+        }
+    }
+    return opseg_max;
+}
