@@ -1,1 +1,0 @@
-Width: 2, Height: 2, Efficiency: 0,6, YearlyEnergy:3120
